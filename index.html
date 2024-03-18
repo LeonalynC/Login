@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Registration System</title>
+    <style>
+        body {
+            font-family: 'Book Antiqua', sans-serif;
+            font-size: 1.8em;
+            margin: 0;
+            padding: 0;
+            background-image: url('l.gif'); /* Specify your background image path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #f7f0f5; /* Fallback color */
+            color: #2c262e; /* White color */
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            height: 40px;
+            width: 300px;
+            font-size: 1.2em;
+            border-radius: 20px;
+            border: 1px solid #e4c1db;
+            padding: 0 15px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease; /* Adding transition */
+        }
+        input[type="submit"] {
+            background-color: #ff4d6d;
+            color: #fff; /* White color */
+            cursor: pointer;
+        }
+        .regForm,
+        .logForm {
+            margin-top: 25px;
+        }
+        .logForm {
+            display: none;
+        }
+        .welcomePanel {
+            margin-top: 25px;
+        }
+        /* White stroke for text */
+        h1, h2, p {
+            text-shadow: -1px -1px 0 #fff,  
+                          1px -1px 0 #fff,
+                         -1px  1px 0 #fff,
+                          1px  1px 0 #fff;
+            transition: all 0.3s ease; /* Adding transition */
+        }
+
+        /* Remove white stroke for Username and Password labels */
+        label {
+            text-shadow: none;
+        }
+
+        /* Style for labels */
+        label {
+            display: inline-block;
+            width: 100px; /* Adjust width as needed */
+            text-align: right;
+            margin-right: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="title">Login and Registration System</h1>
+
+<div class="regForm">
+    <h2>Register here!</h2>
+    <form action="#" id="registrationForm">
+        <p><label for="usernameReg">Username:</label><input type="text" id="usernameReg"></p>
+        <p><label for="passwordReg">Password:</label><input type="password" id="passwordReg"></p>
+        <input type="submit" value="Register">
+    </form>
+</div>
+
+<div class="logForm">
+    <h2>Login here! Time to login now!</h2>
+    <form action="#" id="loginForm">
+        <p><label for="username">Username:</label><input type="text" id="username"></p>
+        <p><label for="password">Password:</label><input type="password" id="password"></p>
+        <input type="submit" value="Login">
+    </form>
+</div>
+
+<div class="welcomePanel">
+    <h2 id="greeting"></h2>
+</div>
+
+<script>
+    const title = document.querySelector('#title');
+    const regForm = document.querySelector('.regForm');
+    const usernameReg = document.getElementById('usernameReg');
+    const passwordReg = document.getElementById('passwordReg');
+    const logForm = document.querySelector('.logForm');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    const usernameAndPasswords = {};
+
+    function checkIfUserExists(username, usernameAndPasswords) {
+        return usernameAndPasswords.hasOwnProperty(username);
+    }
+
+    function validateUserNameAndPassword(username, password, usernameAndPasswords) {
+        return usernameAndPasswords.hasOwnProperty(username) && usernameAndPasswords[username] === password;
+    }
+
+    function validatePassword(password) {
+        if (password.length < 8) {
+            return false;
+        }
+        if (/^\d+$/.test(password)) {
+            return false;
+        }
+        if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+            return false;
+        }
+        return true;
+    }
+
+    document.getElementById('registrationForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (usernameReg.value.length === 0 || passwordReg.value.length === 0) {
+            alert("Fill out all the forms first");
+        } else if (!validatePassword(passwordReg.value)) {
+            alert("Password must be at least 8 characters long, contain both uppercase and lowercase characters, and not consist solely of integers.");
+        } else {
+            if (checkIfUserExists(usernameReg.value, usernameAndPasswords)) {
+                alert('Username is already taken');
+            } else {
+                usernameAndPasswords[usernameReg.value] = passwordReg.value;
+                console.log(usernameAndPasswords);
+                logForm.style.display = "block";
+                regForm.style.display = "none";
+            }
+        }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (validateUserNameAndPassword(username.value, password.value, usernameAndPasswords)) {
+            logForm.style.display = "none";
+            title.style.display = "none";
+            document.querySelector('.welcomePanel #greeting').innerHTML = "Good day! " + username.value;
+        } else {
+            alert("Username and password don't exist");
+        }
+    });
+</script>
+
+</body>
+</html>
